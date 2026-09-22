@@ -1,547 +1,250 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore public-library staffing trends nationwide, statewide, and for comparable systems.">
   <title>Library Staffing Trends</title>
-
-  <meta
-    name="description"
-    content="Explore public library staffing trends nationwide, statewide and among similar systems."
-  >
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
   <link rel="stylesheet" href="style.css">
-
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-  <main class="site-canvas">
-    <div class="dashboard-frame">
+  <main class="site-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <a class="brand" href="#overview" aria-label="Workforce Lens home">
+          <span class="brand-mark" aria-hidden="true">▤</span>
+          <span>Workforce<small>Lens</small></span>
+        </a>
+        <button class="icon-button close-menu" id="closeMenu" type="button" aria-label="Close navigation">×</button>
+      </div>
 
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <a class="logo" href="#overview">
-            <span class="logo-icon">
-              <i data-lucide="book-open"></i>
-            </span>
+      <nav aria-label="Dashboard navigation">
+        <a class="nav-link active" href="#overview"><span aria-hidden="true">▦</span>Overview</a>
+        <a class="nav-link" href="#trends"><span aria-hidden="true">⌁</span>Staffing trends</a>
+        <a class="nav-link" href="#peers"><span aria-hidden="true">♙</span>Similar systems</a>
+        <a class="nav-link" href="#method"><span aria-hidden="true">ⓘ</span>Methodology</a>
+      </nav>
 
-            <span>
-              Workforce
-              <b>Lens</b>
-            </span>
-          </a>
+      <div class="sidebar-divider"></div>
+      <p class="eyebrow muted">QUICK VIEW</p>
+      <button class="quick-view" type="button" data-quick-view="state"><i class="dot orange"></i>Oklahoma</button>
+      <button class="quick-view" type="button" data-quick-view="peers"><i class="dot purple"></i>OK0074 peers</button>
 
-          <button
-            class="close-menu"
-            id="closeMenu"
-            type="button"
-            aria-label="Close navigation"
-          >
-            <i data-lucide="x"></i>
-          </button>
+      <article class="focus-card">
+        <span>FOCUS SYSTEM</span>
+        <strong>OK0074</strong>
+        <h2 id="focusName">Metropolitan Library System</h2>
+        <p id="focusLocation">Oklahoma City, OK</p>
+        <div><b id="focusStaff">—</b> paid FTE · <span id="focusYear">—</span></div>
+      </article>
+    </aside>
+
+    <button class="scrim" id="scrim" type="button" aria-label="Close navigation" hidden></button>
+
+    <section class="workspace">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="openMenu" type="button" aria-label="Open navigation">☰</button>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search a library, city, state, or FSCS…" autocomplete="off">
+        </label>
+        <div class="updated"><i class="status-dot"></i>Updated through <span id="latestYear">—</span></div>
+      </header>
+
+      <div class="content" id="overview">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">WORKFORCE INTELLIGENCE</p>
+            <h1>Library staffing overview</h1>
+            <p class="subhead">Compare staffing capacity nationwide, statewide, and among similar systems.</p>
+          </div>
+          <button class="export-button" id="exportButton" type="button"><span aria-hidden="true">⇩</span>Export current view</button>
         </div>
 
-        <nav>
-          <a class="nav-link active" href="#overview">
-            <i data-lucide="layout-dashboard"></i>
-            Overview
-          </a>
+        <div class="control-strip" aria-label="Dashboard filters">
+          <div class="segmented" role="group" aria-label="Geographic view">
+            <button class="active" type="button" data-view="national">Nationwide</button>
+            <button type="button" data-view="state">Statewide</button>
+            <button type="button" data-view="peers">Similar systems</button>
+          </div>
 
-          <a class="nav-link" href="#trends">
-            <i data-lucide="chart-no-axes-combined"></i>
-            Staffing trends
-          </a>
+          <label class="select-control state-control" id="stateControl" hidden>
+            State
+            <select id="stateSelect" aria-label="Select state"></select>
+          </label>
 
-          <a class="nav-link" href="#peers">
-            <i data-lucide="users"></i>
-            Similar systems
-          </a>
+          <label class="select-control year-control">
+            Snapshot year
+            <select id="yearSelect" aria-label="Select dashboard snapshot year"></select>
+          </label>
 
-          <a class="nav-link" href="#methodology">
-            <i data-lucide="circle-help"></i>
-            Methodology
-          </a>
-        </nav>
+          <span class="view-note" id="viewNote">All U.S. systems</span>
+        </div>
 
-        <div class="sidebar-divider"></div>
-
-        <p class="sidebar-label">QUICK VIEW</p>
-
-        <button class="quick-link" type="button" data-view="state">
-          <span class="quick-dot orange"></span>
-          Oklahoma
-        </button>
-
-        <button class="quick-link" type="button" data-view="peers">
-          <span class="quick-dot purple"></span>
-          Metropolitan Library peers
-        </button>
-
-        <section class="focus-card">
-          <span>FOCUS SYSTEM</span>
-
-          <strong>OK0074</strong>
-          <h3>Metropolitan Library System</h3>
-
-          <p>
-            Oklahoma City, OK<br>
-            City (11) · 19 buildings
-          </p>
-
+        <aside class="quality-alert" id="qualityAlert" role="note" aria-label="2024 data quality update" hidden>
+          <span class="quality-alert-icon" aria-hidden="true">!</span>
           <div>
-            <b>637.3</b>
-            paid FTE
+            <strong>Validated 2024 staffing update</strong>
+            <p>OK0074 has 480.5 paid FTE and 292.5 total librarians, including 118 ALA-MLS librarians. The reconciled mix is 118 ALA-MLS librarians, 174.5 other librarians, and 188 other paid staff.</p>
+          </div>
+        </aside>
+
+        <section class="kpi-grid" aria-label="Staffing summary">
+          <article class="kpi-card featured">
+            <div class="kpi-top"><span class="kpi-icon">♙</span><em id="staffChange">—</em></div>
+            <p>Total paid staff</p>
+            <strong id="staffValue">—</strong>
+            <small id="staffMeta">FTE</small>
+            <div class="sparkline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-top"><span class="kpi-icon blue">▤</span><em id="librarianChange">—</em></div>
+            <p>Total librarians</p>
+            <strong id="librarianValue">—</strong>
+            <small id="librarianMeta">—</small>
+            <div class="mini-line blue-line" aria-hidden="true"></div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-top"><span class="kpi-icon gold">↗</span><em id="longTermBadge">—</em></div>
+            <p>Long-term change</p>
+            <strong id="longTermValue">—</strong>
+            <small id="longTermMeta">—</small>
+            <div class="mini-line gold-line" aria-hidden="true"></div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-top"><span class="kpi-icon purple">$</span><em id="spendPerCapita">—</em></div>
+            <p>Operating budget</p>
+            <strong id="budgetValue">—</strong>
+            <small id="budgetMeta">—</small>
+            <div class="mini-line purple-line" aria-hidden="true"></div>
+          </article>
+        </section>
+
+        <section class="analytics-grid" id="trends">
+          <article class="panel trend-panel">
+            <div class="panel-head">
+              <div>
+                <h2 id="trendTitle">Nationwide workforce</h2>
+                <p id="trendSubtitle">Public library systems reporting staffing</p>
+              </div>
+              <div class="metric-toggle" role="group" aria-label="Trend metric">
+                <button class="active" type="button" data-metric="staff">Paid staff</button>
+                <button type="button" data-metric="librarians">Librarians</button>
+              </div>
+            </div>
+
+            <div class="year-range-control" id="comparisonControl" hidden>
+              <div class="year-range-summary">
+                <div>
+                  <span>COMPARISON YEARS</span>
+                  <strong id="comparisonYears">2009—2023</strong>
+                  <small>Drag either handle to change the inclusive trend window.</small>
+                </div>
+                <output id="comparisonChange" aria-live="polite"><b>—</b><span>OK0074 paid staff</span></output>
+              </div>
+              <div class="dual-range">
+                <div class="range-rail" aria-hidden="true"><i id="rangeFill"></i></div>
+                <input id="startYearRange" type="range" aria-label="Comparison start year">
+                <input id="endYearRange" type="range" aria-label="Comparison end year">
+              </div>
+              <div class="range-bounds" aria-hidden="true"><span id="rangeMin">—</span><span id="rangeMax">—</span></div>
+            </div>
+
+            <div class="chart-wrap" id="lineChart" role="img" aria-label="Library staffing trend"></div>
+            <div class="chart-footer">
+              <div class="legend" id="chartLegend"></div>
+              <span id="chartHint">Hover points for exact values</span>
+            </div>
+          </article>
+
+          <article class="panel mix-panel">
+            <div class="panel-head">
+              <div><h2>Workforce mix</h2><p id="mixYear">— composition</p></div>
+              <em id="librarianShareBadge">—</em>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="workforceDonut">
+                <div><small>Total FTE</small><strong id="mixTotal">—</strong></div>
+              </div>
+            </div>
+            <div class="mix-legend">
+              <div><i class="purple-bg"></i><span><b>ALA-MLS librarians</b><small id="mixAla">—</small></span><strong id="mixAlaShare">—</strong></div>
+              <div><i class="orange-bg"></i><span><b>Other librarians</b><small id="mixOtherLibrarians">—</small></span><strong id="mixOtherLibrarianShare">—</strong></div>
+              <div><i class="blue-bg"></i><span><b>Other paid staff</b><small id="mixOtherFte">—</small></span><strong id="mixOtherShare">—</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="benchmark-grid">
+          <article class="panel benchmark-panel">
+            <div class="panel-head">
+              <div><h2 id="benchmarkTitle">Metropolitan Library System staffing benchmark</h2><p id="benchmarkSubtitle">OK0074 · Paid FTE per 10,000 residents</p></div>
+              <span class="benchmark-badge" id="benchmarkBadge">—</span>
+            </div>
+            <div id="benchmarkRows"></div>
+          </article>
+
+          <article class="insight-panel">
+            <span id="signalYear">WORKFORCE SIGNAL</span>
+            <strong id="signalStaff">—</strong>
+            <h2 id="signalTitle">paid FTE at Metropolitan Library System</h2>
+            <p id="signalText">—</p>
+            <div><span id="signalLocation">Oklahoma City, OK</span><b id="signalPopulation">— people</b></div>
+          </article>
+        </section>
+
+        <section class="peer-section" id="peers">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">SIMILAR SYSTEMS</p>
+              <h2>Peer finder</h2>
+              <p id="peerDescription">Match Metropolitan Library System using service population and operating expenditures.</p>
+            </div>
+            <div class="match-pill"><b id="matchCount">—</b> systems match</div>
+          </div>
+
+          <div class="peer-filters">
+            <label><span>Population tolerance <b id="populationToleranceLabel">±35%</b></span><input id="populationTolerance" type="range" min="10" max="75" step="5" value="35"></label>
+            <label><span>Budget tolerance <b id="budgetToleranceLabel">±35%</b></span><input id="budgetTolerance" type="range" min="10" max="75" step="5" value="35"></label>
+          </div>
+
+          <div class="table-panel">
+            <table>
+              <thead><tr><th>Library system</th><th>Location</th><th>Locale</th><th>Population</th><th>Operating budget</th><th>Paid staff</th><th>Librarians</th><th>Buildings</th><th>Staff / 10K</th></tr></thead>
+              <tbody id="peerTableBody"></tbody>
+            </table>
+            <p class="empty-state" id="emptyState" hidden>No systems match the current search or tolerance ranges.</p>
           </div>
         </section>
 
-        <div class="sidebar-profile">
-          <span class="avatar">PL</span>
-
-          <span>
-            <b>Public Libraries</b>
-            <small>Survey · 2024</small>
-          </span>
-        </div>
-      </aside>
-
-      <button
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-        type="button"
-        aria-label="Close navigation"
-      ></button>
-
-      <section class="main-area">
-
-        <header class="topbar">
-          <button
-            class="mobile-menu"
-            id="mobileMenu"
-            type="button"
-            aria-label="Open navigation"
-          >
-            <i data-lucide="menu"></i>
-          </button>
-
-          <label class="search-box">
-            <i data-lucide="search"></i>
-
-            <input
-              id="dashboardSearch"
-              type="search"
-              placeholder="Search a state, library, city or FSCS…"
-              aria-label="Search libraries"
-            >
-          </label>
-
-          <div class="update-status">
-            <span></span>
-            Updated through 2024
+        <section class="method-section" id="method">
+          <div><p class="eyebrow">ABOUT THE DATA</p><h2>Clear measures, comparable systems.</h2></div>
+          <div class="method-cards">
+            <article><b>01</b><h3>Total paid staff</h3><p>Full-time equivalent employees across all paid roles. Suppressed and negative values are treated as missing.</p></article>
+            <article><b>02</b><h3>Total librarians</h3><p>All librarian FTE, including staff with and without an ALA-accredited master’s degree.</p></article>
+            <article><b>03</b><h3>Peer method</h3><p>Comparable systems are ranked using service-population and operating-budget distance.</p></article>
           </div>
-
-          <button class="information-button" type="button">
-            <i data-lucide="info"></i>
-          </button>
-        </header>
-
-        <div class="content">
-
-          <section class="welcome-row" id="overview">
-            <div>
-              <p class="eyebrow">WORKFORCE INTELLIGENCE</p>
-              <h1>Library staffing overview</h1>
-
-              <span>
-                Compare staffing capacity across the nation, Oklahoma and
-                systems with similar population and operating budgets.
-              </span>
-            </div>
-
-            <button class="export-button" id="exportButton" type="button">
-              <i data-lucide="download"></i>
-              Export current view
-            </button>
-          </section>
-
-          <section class="control-strip">
-            <div class="segmented-control" id="viewControls">
-              <button class="active" type="button" data-view="national">
-                Nationwide
-              </button>
-
-              <button type="button" data-view="state">
-                Statewide
-              </button>
-
-              <button type="button" data-view="peers">
-                Similar systems
-              </button>
-            </div>
-
-            <label class="state-control" id="stateControl">
-              State
-
-              <select>
-                <option>Oklahoma</option>
-              </select>
-            </label>
-
-            <span id="viewNote">All U.S. public library systems</span>
-          </section>
-
-          <section class="kpi-grid">
-            <article class="kpi-card featured">
-              <header>
-                <span class="kpi-icon">
-                  <i data-lucide="users"></i>
-                </span>
-
-                <em id="staffChangeBadge">+1.9%</em>
-              </header>
-
-              <p>Total paid staff</p>
-              <strong id="staffTotal">147,368.5</strong>
-              <small>Full-time equivalent · 2024</small>
-
-              <div class="sparkline">
-                <i></i><i></i><i></i><i></i>
-                <i></i><i></i><i></i>
-              </div>
-            </article>
-
-            <article class="kpi-card">
-              <header>
-                <span class="kpi-icon blue">
-                  <i data-lucide="book-open"></i>
-                </span>
-
-                <em class="positive" id="librarianChangeBadge">
-                  +3.8%
-                </em>
-              </header>
-
-              <p>Total librarians</p>
-              <strong id="librarianTotal">53,137.7</strong>
-              <small id="librarianShare">36.1% of paid staff</small>
-
-              <span class="mini-line blue-line"></span>
-            </article>
-
-            <article class="kpi-card">
-              <header>
-                <span class="kpi-icon gold">
-                  <i data-lucide="trending-up"></i>
-                </span>
-
-                <em id="longTermBadge">+1.9%</em>
-              </header>
-
-              <p>Long-term change</p>
-              <strong id="longTermChange">+1.9%</strong>
-              <small id="longTermLabel">Paid staff since 2009</small>
-
-              <span class="mini-line gold-line"></span>
-            </article>
-
-            <article class="kpi-card">
-              <header>
-                <span class="kpi-icon purple">
-                  <i data-lucide="wallet-cards"></i>
-                </span>
-
-                <em class="positive" id="spendingBadge">$47</em>
-              </header>
-
-              <p>Operating budget</p>
-              <strong id="operatingBudget">$16.2B</strong>
-              <small>Investment · 2024</small>
-
-              <span class="mini-line purple-line"></span>
-            </article>
-          </section>
-
-          <section class="analytics-grid" id="trends">
-            <article class="panel trend-panel">
-              <header class="panel-header">
-                <div>
-                  <h2 id="trendTitle">Nationwide workforce</h2>
-                  <p id="trendSubtitle">
-                    Public library systems reporting nationwide
-                  </p>
-                </div>
-
-                <div class="metric-control" id="metricControls">
-                  <button class="active" type="button" data-metric="staff">
-                    Paid staff
-                  </button>
-
-                  <button type="button" data-metric="librarians">
-                    Librarians
-                  </button>
-                </div>
-              </header>
-
-              <div class="trend-chart">
-                <canvas id="trendChart"></canvas>
-              </div>
-
-              <footer class="chart-footer">
-                <div id="chartLegend"></div>
-                <span>Hover over points for exact values</span>
-              </footer>
-            </article>
-
-            <article class="panel workforce-mix">
-              <header class="panel-header">
-                <div>
-                  <h2>Workforce mix</h2>
-                  <p>2024 composition</p>
-                </div>
-
-                <span class="positive-pill" id="mixPercentage">
-                  36.1%
-                </span>
-              </header>
-
-              <div class="doughnut-container">
-                <canvas id="mixChart"></canvas>
-
-                <div class="doughnut-center">
-                  <small>Total FTE</small>
-                  <strong id="mixTotal">147K</strong>
-                </div>
-              </div>
-
-              <div class="mix-legend" id="mixLegend"></div>
-            </article>
-          </section>
-
-          <section class="benchmark-grid">
-            <article class="panel benchmark-panel">
-              <header class="panel-header">
-                <div>
-                  <h2>Metropolitan Library System benchmark</h2>
-                  <p>OK0074 · Paid FTE per 10,000 residents</p>
-                </div>
-
-                <span class="positive-pill">+64.5% vs peers</span>
-              </header>
-
-              <div class="benchmark-list">
-                <div class="benchmark-row">
-                  <span>
-                    <b>OK0074</b>
-                    <small>Metropolitan Library System</small>
-                  </span>
-
-                  <div class="bar-track">
-                    <i style="width:100%; background:#ff6f35;"></i>
-                  </div>
-
-                  <strong>7.88</strong>
-                </div>
-
-                <div class="benchmark-row">
-                  <span>
-                    <b>Oklahoma</b>
-                    <small>State aggregate</small>
-                  </span>
-
-                  <div class="bar-track">
-                    <i style="width:66.9%; background:#ffb372;"></i>
-                  </div>
-
-                  <strong>5.27</strong>
-                </div>
-
-                <div class="benchmark-row">
-                  <span>
-                    <b>Peer median</b>
-                    <small>Eight closest systems</small>
-                  </span>
-
-                  <div class="bar-track">
-                    <i style="width:60.8%; background:#6d5ae6;"></i>
-                  </div>
-
-                  <strong>4.79</strong>
-                </div>
-
-                <div class="benchmark-row">
-                  <span>
-                    <b>Nationwide</b>
-                    <small>U.S. aggregate</small>
-                  </span>
-
-                  <div class="bar-track">
-                    <i style="width:54.6%; background:#18aee0;"></i>
-                  </div>
-
-                  <strong>4.30</strong>
-                </div>
-              </div>
-            </article>
-
-            <aside class="insight-panel">
-              <span>WORKFORCE SIGNAL</span>
-
-              <strong>637.3</strong>
-              <h2>paid FTE at Metropolitan Library System</h2>
-
-              <p>
-                The system reports 64.5% more paid staff per resident than
-                the matched-system median, with approximately $60 invested
-                per resident.
-              </p>
-
-              <div>
-                <span>Oklahoma City, OK</span>
-                <b>808,866 people</b>
-              </div>
-            </aside>
-          </section>
-
-          <section class="peer-section" id="peers">
-            <header class="section-heading">
-              <div>
-                <p class="eyebrow">SIMILAR SYSTEMS</p>
-                <h2>Peer finder</h2>
-
-                <span>
-                  Compare Metropolitan Library System with systems having
-                  similar population and operating expenditures.
-                </span>
-              </div>
-
-              <div class="match-pill">
-                <b id="matchCount">8</b>
-                <span id="matchLabel">systems match</span>
-              </div>
-            </header>
-
-            <div class="peer-filters">
-              <label>
-                <span>
-                  Population tolerance
-                  <b id="populationLabel">±35%</b>
-                </span>
-
-                <input
-                  id="populationTolerance"
-                  type="range"
-                  min="10"
-                  max="75"
-                  step="5"
-                  value="35"
-                >
-              </label>
-
-              <label>
-                <span>
-                  Budget tolerance
-                  <b id="budgetLabel">±35%</b>
-                </span>
-
-                <input
-                  id="budgetTolerance"
-                  type="range"
-                  min="10"
-                  max="75"
-                  step="5"
-                  value="35"
-                >
-              </label>
-            </div>
-
-            <div class="table-panel">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Library system</th>
-                    <th>Location</th>
-                    <th>Locale</th>
-                    <th>Population</th>
-                    <th>Operating budget</th>
-                    <th>Paid staff</th>
-                    <th>Librarians</th>
-                    <th>Buildings</th>
-                    <th>Staff / 10K</th>
-                  </tr>
-                </thead>
-
-                <tbody id="peerTableBody"></tbody>
-              </table>
-
-              <div class="empty-state" id="emptyState">
-                No systems match the current search or tolerance ranges.
-              </div>
-            </div>
-          </section>
-
-          <section class="methodology" id="methodology">
-            <div>
-              <p class="eyebrow">ABOUT THE DATA</p>
-              <h2>Clear measures and comparable systems.</h2>
-            </div>
-
-            <div class="methodology-grid">
-              <article>
-                <b>01</b>
-                <h3>Staffing measures</h3>
-
-                <p>
-                  Paid staff and librarian counts are reported as
-                  full-time-equivalent positions.
-                </p>
-              </article>
-
-              <article>
-                <b>02</b>
-                <h3>Library information</h3>
-
-                <p>
-                  System names, cities, locales and building counts are joined
-                  from LibraryInfo using FSCS.
-                </p>
-              </article>
-
-              <article>
-                <b>03</b>
-                <h3>Peer methodology</h3>
-
-                <p>
-                  Similarity is based on service-area population and total
-                  operating expenditures.
-                </p>
-              </article>
-            </div>
-          </section>
-
-          <footer class="site-footer">
-            <span>Source: IMLS PLS + LibraryInfo.csv</span>
-
-            <p>
-              LibraryInfo.FSCS joined to LibraryDetails.FSCSKey.
-            </p>
-
-            <b>2009–2024</b>
-          </footer>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        <footer>
+          <span id="sourceText">Source: IMLS Public Libraries Survey</span>
+          <p>Totals reflect available, unsuppressed records.</p>
+          <b id="yearCoverage">2009—2024</b>
+        </footer>
+      </div>
+    </section>
   </main>
 
+  <div class="loading" id="loading" role="status"><span></span><p>Preparing workforce dashboard…</p></div>
+  <div class="error-message" id="errorMessage" hidden>
+    <h2>Data could not be loaded</h2>
+    <p>Keep <code>staffing-data.js</code> beside the three source files and reload the page.</p>
+  </div>
+
+  <script src="staffing-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
